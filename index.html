@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>导航主页</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+      font-family: 'Microsoft YaHei', Arial, sans-serif;
+      position: relative;
+    }
+
+    .top-message {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .search-container {
+      display: flex;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .search-container select,
+    .search-container input,
+    .search-container button {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-right: 5px;
+    }
+
+    .icon-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      width: 95%;
+      max-width: 950px;
+    }
+
+    .icon {
+      width: 65px;
+      height: 25px;
+      background-color: #e0e0e0;
+      color: black;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      font-size: 12px;
+      text-align: center;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+    }
+
+    .icon:hover {
+      background-color: #b0b0b0;
+    }
+
+    .icon .delete-btn {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      display: none;
+      cursor: pointer;
+    }
+
+    .icon:hover .delete-btn {
+      display: block;
+    }
+
+    .add-button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .rdp-links-container {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 20px;
+    }
+
+    .rdp-link {
+      width: 65px;
+      height: 65px;
+      background-color: #f0f0f0;
+      color: black;
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      font-size: 14px;
+      text-align: center;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .rdp-link:hover {
+      background-color: #cccccc;
+    }
+
+    .rdp-link:visited {
+      color: black;
+    }
+
+    .import-btn,
+    .export-btn {
+      position: fixed;
+      bottom: 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .export-btn {
+      right: 20px;
+    }
+
+    .import-btn {
+      left: 20px;
+    }
+
+    .import-btn:hover,
+    .export-btn:hover {
+      background-color: #218838;
+    }
+
+    #password-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #password-modal .modal-content {
+      background: #222;
+      padding: 30px;
+      border-radius: 12px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+
+    #password-modal input {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+    }
+
+    #password-modal button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-message">感谢一直追求极致的自己</div>
+
+  <div class="search-container">
+    <select id="search-engine">
+      <option value="https://cn.bing.com/search?q=">Bing</option>
+      <option value="https://www.google.com/search?q=">Google</option>
+      <option value="https://www.baidu.com/s?wd=">百度</option>
+    </select>
+    <input type="text" id="search-input" placeholder="搜索..." />
+    <button onclick="search()"> 搜索</button>
+    <button class="add-button" onclick="addWebsite()">+</button>
+  </div>
+
+  <div class="icon-container" id="fixed-links-container">
+    <div class="icon" onclick="window.open('http://hkcw.online:96', '_blank')">Jellyfin</div>
+    <div class="icon" onclick="window.open('http://hkcw.online:56', '_blank')">Komga</div>
+    <div class="icon" onclick="window.open('https://chatgpt.com/', '_blank')">GPT</div>
+    <div class="icon" onclick="window.open('https://www.doubao.com/chat/', '_blank')">豆包</div>
+    <div class="icon" onclick="window.open('https://yuanbao.tencent.com/chat', '_blank')">元宝</div>
+    <div class="icon" onclick="window.open('https://login.flashnas.cn/web/#/login', '_blank')">FlashNas</div>
+    <div class="icon" onclick="window.open('https://search.douban.com/movie/subject_search?search_text=', '_blank')">豆瓣电影</div>
+    <div class="icon" onclick="window.open('https://www.deepl.com/', '_blank')">翻译</div>
+    <div class="icon" onclick="window.open('https://i.mi.com/?_locale=zh_CN', '_blank')">小米云</div>
+    <div class="icon" onclick="window.open('https://snapany.com/zh/youtube', '_blank')">在线解析</div>
+  </div>
+
+  <div class="icon-container" id="icon-container"></div>
+
+  <div class="rdp-links-container">
+
+	<a href="https://qhrs.ltd/card.html">
+  	<div class="rdp-link">命运</div>
+	</a>
+
+    <a href="data:text/plain,full address:s:hkcw.online:81" download="rdp2.rdp">
+      <div class="rdp-link">赚钱</div>
+    </a>
+    <a href="data:text/plain,full address:s:hkcw.online:8" download="rdp3.rdp">
+      <div class="rdp-link">工作</div>
+    </a>
+    <div class="rdp-link" onclick="openPasswordModal()">学习</div>
+  </div>
+
+  <button class="import-btn" onclick="importLinks()"> 导入</button>
+  <button class="export-btn" onclick="exportLinks()"> 导出</button>
+
+  <!-- 密码弹窗 -->
+  <div id="password-modal">
+    <div class="modal-content">
+      <h3>请输入进入学习系统的密码</h3>
+      <input type="password" id="study-password" placeholder="密码" />
+      <div>
+        <button onclick="verifyPassword()">确认</button>
+        <button onclick="closePasswordModal()">取消</button>
+      </div>
+      <p id="password-error" style="color: red; display: none; margin-top: 10px;">
+        密码错误，请重试
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const correctHash = "171ff62e4d6aadf634b95168c50523c12359931377a6af34bcdf7f66aca28cd9";
+    function openPasswordModal() {
+      document.getElementById("password-modal").style.display = "flex";
+      document.getElementById("study-password").value = "";
+      document.getElementById("password-error").style.display = "none";
+    }
+
+    function closePasswordModal() {
+      document.getElementById("password-modal").style.display = "none";
+    }
+
+    async function sha256(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+      return hashHex;
+    }
+
+    async function verifyPassword() {
+      const inputPwd = document.getElementById("study-password").value;
+      try {
+          const hashed = await sha256(inputPwd);
+          if (hashed === correctHash) {
+              window.location.href = "learning.html";
+          } else {
+              document.getElementById("password-error").style.display = "block";
+          }
+      } catch (error) {
+          console.error("密码验证失败:", error);
+          alert("密码验证出错，请稍后重试。"); // 或者更友好的提示方式
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadWebsites);
+
+    document.getElementById("search-input").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        search();
+      }
+    });
+
+    function search() {
+      let engine = document.getElementById("search-engine").value;
+      let query = document.getElementById("search-input").value;
+      if (query) {
+        window.location.href = engine + encodeURIComponent(query);
+      }
+    }
+
+    function addWebsite() {
+      let url = prompt("输入网址（无需 http://）:");
+      if (url) {
+        if (!url.startsWith("http")) {
+          url = "http://" + url;
+        }
+        let name = prompt("输入网站名称:");
+        let websites = JSON.parse(localStorage.getItem("websites")) || [];
+        websites.push({ name: name, url: url });
+        localStorage.setItem("websites", JSON.stringify(websites));
+        loadWebsites();
+      }
+    }
+
+    function loadWebsites() {
+      let container = document.getElementById("icon-container");
+      container.innerHTML = "";
+      let websites = JSON.parse(localStorage.getItem("websites")) || [];
+      websites.forEach((site, index) => {
+        let div = document.createElement("div");
+        div.className = "icon";
+        div.innerText = site.name;
+        div.onclick = () => window.open(site.url, "_blank");
+
+        let deleteBtn = document.createElement("button");
+        deleteBtn.className = "delete-btn";
+        deleteBtn.innerText = "";
+        deleteBtn.onclick = (event) => {
+          event.stopPropagation();
+          removeWebsite(index);
+        };
+
+        div.appendChild(deleteBtn);
+        container.appendChild(div);
+      });
+    }
+
+    function removeWebsite(index) {
+      let websites = JSON.parse(localStorage.getItem("websites")) || [];
+      websites.splice(index, 1);
+      localStorage.setItem("websites", JSON.stringify(websites));
+      loadWebsites();
+    }
+
+    function exportLinks() {
+      let websites = JSON.parse(localStorage.getItem("websites")) || [];
+      let dataStr = JSON.stringify(websites);
+      let blob = new Blob([dataStr], { type: "application/json" });
+      let link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "websites.json";
+      link.click();
+    }
+
+    function importLinks() {
+      let fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = ".json";
+      fileInput.onchange = function (event) {
+        let file = event.target.files[0];
+        let reader = new FileReader();
+        reader.onload = function () {
+          let websites = JSON.parse(reader.result);
+          localStorage.setItem("websites", JSON.stringify(websites));
+          loadWebsites();
+        };
+        reader.readAsText(file);
+      };
+      fileInput.click();
+    }
+  </script>
+</body>
+</html>
+
